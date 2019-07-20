@@ -1,0 +1,15 @@
+%p#notice= notice
+
+%p
+  %b Filename:
+  = @image.filename
+%p
+  %b Path:
+  = @image.path
+%p
+  %b Hash val:
+  = @image.hash_val
+
+= link_to 'Edit', edit_image_path(@image)
+\|
+= link_to 'Back', images_path
