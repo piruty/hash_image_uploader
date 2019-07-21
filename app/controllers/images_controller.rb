@@ -1,3 +1,5 @@
+require 'securerandom'
+
 class ImagesController < ApplicationController
   before_action :set_image, only: [:show, :edit, :update, :destroy]
 
@@ -24,17 +26,31 @@ class ImagesController < ApplicationController
   # POST /images
   # POST /images.json
   def create
-    @image = Image.new(image_params)
+    uploaded_file = image_params.first
+    original_filename = uploaded_file.original_filename
 
-    respond_to do |format|
-      if @image.save
-        format.html { redirect_to @image, notice: 'Image was successfully created.' }
-        format.json { render :show, status: :created, location: @image }
-      else
-        format.html { render :new }
-        format.json { render json: @image.errors, status: :unprocessable_entity }
-      end
+    hash_val = SecureRandom.alphanumeric(32)
+    hashed_path = "images/#{hash_val}#{File.extname(original_filename)}"
+    output_path = Rails.root.join('public', hashed_path)
+
+    File.open(output_path, 'w+b') do |f|
+      f.write uploaded_file.read
     end
+
+    Image.create(filename: original_filename, path: hashed_path, hash_val: hash_val, content_type: uploaded_file.content_type)
+
+    redirect_to action: :index
+    # @image = Image.new(image_params)
+
+    # respond_to do |format|
+    #   if @image.save
+    #     format.html { redirect_to @image, notice: 'Image was successfully created.' }
+    #     format.json { render :show, status: :created, location: @image }
+    #   else
+    #     format.html { render :new }
+    #     format.json { render json: @image.errors, status: :unprocessable_entity }
+    #   end
+    # end
   end
 
   # PATCH/PUT /images/1
@@ -61,6 +77,10 @@ class ImagesController < ApplicationController
     end
   end
 
+def download
+  image = Image.find_by_hash_val params[:hash]
+end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_image
@@ -69,6 +89,7 @@ class ImagesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def image_params
-      params.require(:image).permit(:filename, :path, :hash_val)
+      # params.require(:image).permit(:filename, :path, :hash_val)
+      params.require(:file)
     end
 end

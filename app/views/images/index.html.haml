@@ -3,22 +3,19 @@
 %table
   %thead
     %tr
+      %th Preview
       %th Filename
-      %th Path
       %th Hash val
-      %th
-      %th
-      %th
+      %th Content Type
 
   %tbody
     - @images.each do |image|
       %tr
+        %td
+          = image_tag "/#{image.filename}", alt: image.filename, height: '80px', width: '120px'
         %td= image.filename
-        %td= image.path
         %td= image.hash_val
-        %td= link_to 'Show', image
-        %td= link_to 'Edit', edit_image_path(image)
-        %td= link_to 'Destroy', image, method: :delete, data: { confirm: 'Are you sure?' }
+        %td= image.content_type
 
 %br
 

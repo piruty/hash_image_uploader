@@ -16,6 +16,7 @@ ActiveRecord::Schema.define(version: 2019_07_20_095926) do
     t.string "filename"
     t.string "path"
     t.string "hash_val"
+    t.string "content_type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

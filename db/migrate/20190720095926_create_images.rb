@@ -4,6 +4,7 @@ class CreateImages < ActiveRecord::Migration[5.2]
       t.string :filename
       t.string :path
       t.string :hash_val
+      t.string :content_type
 
       t.timestamps
     end
