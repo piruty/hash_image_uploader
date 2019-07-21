@@ -1,3 +1,3 @@
 class Image < ApplicationRecord
-  has_one_attached :updated_image
+  has_one_attached :uploaded_image
 end
